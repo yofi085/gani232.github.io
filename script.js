@@ -13,201 +13,229 @@ playerInstance.setup({
       autostart: true
 });
 
-function switchTo1() {
-    var playerInstance = jwplayer(); // Ensure you're referencing the correct player instance
-    playerInstance.setup({      
-      file: "https://video.detik.com/transtv/smil:transtv.smil/index.m3u8",
-      image: "images/video.jpg",
-      type: "hls",
-      autostart: true
+// Channel configuration object
+const channels = {
+    'RCTI': {
+        url: 'https://d1abp075u76pbq.cloudfront.net/live/eds/RCTI-DD/sa_dash_vmx/RCTI-DD.mpd',
+        referer: 'https://www.visionplus.id/'
+    },
+    'Trans TV': {
+        url: 'https://video.detik.com/transtv/smil:transtv.smil/index.m3u8'
+    },
+    'Vidio': {
+        url: 'https://app.mt2dc.com/misc?id=204'
+    },
+    'Transvision': {
+        url: 'https://video.detik.com/trans7/smil:trans7.smil/index.m3u8'
+    },
+    'CNN Indonesia': {
+        url: 'https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/chunklist_w733133162_b384000_sleng.m3u8'
+    },
+    'MNC TV': {
+        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/MNCTV-HD/sa_dash_vmx/MNCTV-HD.mpd'
+    },
+    'GTV': {
+        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/GTV-HD/sa_dash_vmx/GTV-HD.mpd'
+    },
+    'Trans7': {
+        url: 'https://video.detik.com/trans7/smil:trans7.smil/index.m3u8'
+    },
+    'SCTV': {
+        url: 'https://app.mt2dc.com/misc?id=204'
+    },
+    'Indosiar': {
+        url: 'https://app.mt2dc.com/misc?id=205'
+    },
+    'MOJI TV': {
+        url: 'https://app.mt2dc.com/misc?id=206'
+    },
+    'MD TV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/NetTV-HD/sa_dash_vmx/NetTV-HD.mpd'
+    },
+    'ANTV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/ANTV/sa_dash_vmx/ANTV.mpd'
+    },
+    'DAAI TV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/DAAITV/sa_dash_vmx/DAAITV.mpd'
+    },
+    'RTV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/RTV/sa_dash_vmx/RTV.mpd'
+    },
+    'Kompas TV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/KompasTV/sa_dash_vmx/KompasTV.mpd'
+    },
+    'Metro TV': {
+        url: 'https://op-group1-swiftservehd-1.dens.tv/h/h12/01.m3u8'
+    },
+    'TVOne': {
+        url: 'http://op-group1-swiftservehd-1.dens.tv/h/h40/01.m3u8'
+    },
+    'SindoNews': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/MNCnews-HDD/sa_dash_vmx/MNCnews-HDD.mpd'
+    },
+    'iNews': {
+        url: 'https://d1abp075u76pbq.cloudfront.net/live/eds/iNewsTV-HDD/sa_dash_vmx/iNewsTV-HDD.mpd'
+    },
+    'IDX': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/IDX/sa_dash_vmx/IDX.mpd'
+    },
+    'TVRI': {
+        url: 'https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional-avc1_1500000=10003-mp4a_96000_eng=20001.m3u8'
+    },
+    'CNBC': {
+        url: 'https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/chunklist_w1230509683_b384000_sleng.m3u8'
+    },
+    'BTV': {
+        url: 'https://b1news.beritasatumedia.com/Beritasatu/B1News_960x540.m3u8'
+    },
+    'Garuda TV': {
+        url: 'https://etv-cdn.kdb.co.id/GarudaTV-Stream/tracks-v1a1/mono.m3u8'
+    },
+    'VTV': {
+        url: 'https://flv.intechmedia.net/live/ch107.m3u8'
+    },
+    'Nick Jr': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/NickJr-HDD/sa_dash_vmx/NickJr-HDD.mpd'
+    },
+    'Nickelodeon': {
+        url: 'https://d1abp075u76pbq.cloudfront.net/live/eds/Nickelodeon/sa_dash_vmx/Nickelodeon.mpd'
+    },
+    'ZooMoo': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Zoomoo/sa_dash_vmx/Zoomoo.mpd'
+    },
+    'Moonbug Kids': {
+        url: 'https://moonbug-rokuus.amagi.tv/playlist.m3u8'
+    },
+    'Dora TV': {
+        url: 'https://service-stitcher.clusters.pluto.tv/stitch/hls/channel/5d14fb6c84dd37df3b4290c5/master.m3u8'
+    },
+    'Dreamworks': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Dreamwork-HD/sa_dash_vmx/Dreamwork-HD.mpd'
+    },
+    'Kids TV': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Kids-HD/sa_dash_vmx/Kids-HD.mpd'
+    },
+    'Cbeebies': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Cbeebies/sa_dash_vmx/Cbeebies.mpd'
+    },
+    'Fun Planet': {
+        url: 'https://cdn01-telkomsel-01.akamaized.net/Content/DASH/Live/channel(c99739b1-0748-4a2a-b586-2501837adf20)/manifest.mpd'
+    },
+    'MyKids': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/My-Kids/sa_dash_vmx/My-Kids.mpd'
+    },
+    'Mentari TV': {
+        url: 'https://app.mt2dc.com/misc?id=8237'
+    },
+    'ANIPLUS': {
+        url: 'http://op-group1-swiftservehd-1.dens.tv/h/h201/02.m3u8'
+    },
+    'CinemachiKids': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Cinemachi-Kids-HD/sa_dash_vmx/Cinemachi-Kids-HD.mpd'
+    },
+    'ANIMAX': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/Animax/sa_dash_vmx/Animax.mpd'
+    },
+    'Cartoon Network': {
+        url: 'https://cdnjkt4.transvision.co.id:1000/live/master/4/4028c6856b8d2390016b9c3ee6c21d7c/manifest.mpd'
+    },
+    'HBO': {
+        url: 'https://cdn01-telkomsel-01.akamaized.net/Content/DASH/Live/channel(92c7b96a-33fc-4899-a032-50ae0fbc9257)/manifest.mpd'
+    },
+    'HBO Hits': {
+        url: 'https://cdn01-telkomsel-01.akamaized.net/Content/DASH/Live/channel(7e3ac8f2-3380-461a-976b-30bca8d939a0)/manifest.mpd'
+    },
+    'HBO Family': {
+        url: 'https://cdn01-telkomsel-01.akamaized.net/Content/DASH/Live/channel(cec31cdd-d2ff-4c23-8a76-ad1c0ef025e2)/manifest.mpd'
+    },
+    'Cinemax': {
+        url: 'https://cdnjkt4.transvision.co.id:1000/live/master/1/4028c6856c3db2cc016cdbfc4a1934bf/manifest.mpd'
+    },
+    'Galaxy Premium': {
+        url: 'https://dsgtq5sngxkde.cloudfront.net/live/eds/GalaxyPremium-HD/sa_dash_vmx/GalaxyPremium-HD.mpd'
+    },
+    'BEIN SPORTS 1': {
+        url: 'https://cempedak-cdn-fly.mncnow.id/live/eds/BEIN01/sa_dash_vmx/BEIN01.mpd'
+    },
+    'BEIN SPORTS 2': {
+        url: 'https://cempedak-cdn-fly.mncnow.id/live/eds/BEIN02/sa_dash_vmx/BEIN02.mpd'
+    },
+    'BEIN SPORTS 3': {
+        url: 'https://cempedak-cdn-fly.mncnow.id/live/eds/BEIN03/sa_dash_vmx/BEIN03.mpd'
+    },
+    'Champions TV 1': {
+        url: 'https://app.mt2dc.com/misc?id=6685'
+    },
+    'Champions TV 2': {
+        url: 'https://app.mt2dc.com/misc?id=6686'
+    },
+    'Champions TV 3': {
+        url: 'https://app.mt2dc.com/misc?id=6786'
+    },
+    'Champions TV 5': {
+        url: 'https://app.mt2dc.com/misc?id=9182'
+    },
+    'Champions TV 6': {
+        url: 'https://app.mt2dc.com/misc?id=9183'
+    },
+    'EPL TV': {
+        url: 'https://app.mt2dc.com/misc?id=9353'
+    }
+};
+
+// Function to switch to a specific channel
+function switchToChannel(channelName) {
+    const channel = channels[channelName];
+    if (!channel) {
+        console.error('Channel not found:', channelName);
+        return;
+    }
+
+    const player = jwplayer("jwplayerDiv");
+    
+    // Configure player settings
+    player.setup({
+        file: channel.url,
+        width: "100%",
+        aspectratio: "16:9",
+        autostart: true,
+        primary: "html5",
+        hlshtml: true,
+        playbackRateControls: true,
+        preload: "auto",
+        controls: true,
+        mute: false,
+        volume: 100,
+        repeat: false,
+        displaytitle: true,
+        displaydescription: true,
+        displaycaptions: true,
+        visualplay: true,
+        playlist: [{
+            file: channel.url,
+            title: channelName,
+            description: "Live TV Channel"
+        }]
     });
 
-    playerInstance.on('play', function() {
-        playerInstance.setFullscreen(true);
-    });
-
-}
-
-function switchTo2() {
-    document.getElementById("jwplayerDiv").innerHTML = '<video id="shakaPlayer" controls autoplay></video>';
-
-    var manifestUri = "https://op-group1-swiftservehd-1.dens.tv/h/h223/02.m3u8";
-    var video = document.getElementById("shakaPlayer");
-
-    shaka.polyfill.installAll();
-
-    if (shaka.Player.isBrowserSupported()) {
-        var player = new shaka.Player(video);
-
-        player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-                type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
-                request.headers["User-Agent"] = "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0";
-                request.headers["Referer"] = "https://vidio.com";
+    // Add referer if specified
+    if (channel.referer) {
+        player.setConfig({
+            httpHeaders: {
+                'Referer': channel.referer
             }
         });
-
-        player.load(manifestUri).then(function () {
-            console.log("The video has been loaded successfully with custom headers.");
-            resizeShakaPlayer();
-        }).catch(function (error) {
-            console.error("Error loading video:", error);
-        });  
-          
-    } else {
-        console.error("Shaka Player is not supported on this browser.");
-    }
-
-}
-
-  function switchTo3() {
-    document.getElementById("jwplayerDiv").innerHTML = '<video id="shakaPlayer" controls autoplay></video>';
-
-    var manifestUri = "https://app.mt2dc.com/misc?id=204";
-    var video = document.getElementById("shakaPlayer");
-
-    shaka.polyfill.installAll();
-
-    if (shaka.Player.isBrowserSupported()) {
-        var player = new shaka.Player(video);
-
-        player.getNetworkingEngine().registerRequestFilter((type, request) => {
-            if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-                type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
-                request.headers["User-Agent"] = "http-user-agent=VidioPlayer/4.3.0-WITH_ADS";
-                request.headers["Referer"] = "https://vidio.com";
-            }
-        });
-
-        player.load(manifestUri).then(function () {
-            console.log("The video has been loaded successfully with custom headers.");
-            resizeShakaPlayer();
-        }).catch(function (error) {
-            console.error("Error loading video:", error);
-        });
-        video.addEventListener("playing", () => {
-            requestFullscreen(video);
-        });
-    } else {
-        console.error("Shaka Player is not supported on this browser.");
     }
 }
 
-  function switchTo4() {
-      playerInstance.setup({
-      file: "https://cdnjkt4.transvision.co.id:1000/live/master/4/4028c6856b8d2390016b9c3ee6c21d7c/manifest.mpd",
-      image: "images/video.jpg",
-      type: "dash",
-      dash: {
-         dashConfiguration: {
-            xhrSetup: function (xhr) {
-                xhr.setRequestHeader("dt-custom-data", "eyJ1c2VySWQiOiJyZWFjdC1qdy1wbGF5ZXIiLCJzZXNzaW9uSWQiOiIxMjM0NTY3ODkiLCJtZXJjaGFudCI6ImdpaXRkX3RyYW5zdmlzaW9uIn0=");
-                        }
-                    }
-                },
-      drm: {
-            "widevine": {
-                  "url": "https://lic-cubmux.konslet.workers.dev/4rr0w/play.wv"
-            }
-      },
-      autostart: true
-    });
-      playerInstance.on("audioTracks", function(event) {
-        let audioTracks = playerInstance.getAudioTracks();
-        console.log("Available Audio Tracks:", audioTracks);
-
-        if (audioTracks.length > 1) {
-            // Select a specific audio track (e.g., index 1)
-            playerInstance.setCurrentAudioTrack(1);
-            console.log("Switched to audio track 1");
-        } else {
-            console.log("No alternative audio tracks available.");
-        }
-    });
-  }
-
-  function switchTo5() {
-      playerInstance.setup({
-      file: "https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/playlist.m3u8",
-      image: "images/video.jpg",
-      type: "hls",
-      autostart: true
-    });
-  }
-
-  function switchToExtra1() {
-      playerInstance.setup({
-      file: "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/3b7qwiqzk3/out/v1/9f14895badca43e6a716db021dcd0c31/cenc.mpd",
-      image: "images/video.jpg",
-      type: "dash",
-      drm: {
-        "clearkey": {
-          "keyId": "dc69b6159a0f9f0a4e03b3ff91cbacd5",
-          "key": "d0dcbcd7723bc40df0bf34c9c092d51f"
-        }
-      },
-      autostart: true
-    });
-  }
-
-  function switchToExtra2() {
-    if (document.fullscreenElement) {
-        document.exitFullscreen().catch(err => console.error("Error exiting fullscreen:", err));
-    }
-
-        
-     document.getElementById("jwplayerDiv").innerHTML = `
-        <div class="plyr__video-embed" id="plyrPlayer">
-            <iframe
-                src="https://www.youtube.com/embed/yNKvkPJl-tg?autoplay=1&playsinline=1"
-                allowfullscreen
-                allow="autoplay"
-            ></iframe>
-        </div>
-    `;
-
-
-    const player = new Plyr("#plyrPlayer", {
-        autoplay: true,
-        controls: ["play", "volume", "fullscreen"]
-    });
-
-    player.on("ready", () => {
-        requestFullscreen(document.getElementById("plyrPlayer"));
-    });
-
-}
-
-function switchToYT(videoID) {
-    console.log("Switching to YouTube video ID:", videoID);
-    // Exit fullscreen if active before switching
-    if (document.fullscreenElement) {
-        document.exitFullscreen().catch(err => console.error("Error exiting fullscreen:", err));
-    }
-
-    // Replace content with Plyr player
-    document.getElementById("jwplayerDiv").innerHTML = `
-        <div class="plyr__video-embed" id="plyrPlayer">
-            <iframe
-                src="https://www.youtube.com/embed/${videoID}?autoplay=1&playsinline=1"
-                allowfullscreen
-                allow="autoplay"
-            ></iframe>
-        </div>
-    `;
-
-    // Initialize Plyr
-    const player = new Plyr("#plyrPlayer", {
-        autoplay: true,
-        controls: ["play", "volume", "fullscreen"]
-    });
-
-    // Request fullscreen when the player is ready
-    player.on("ready", () => {
-        requestFullscreen(document.getElementById("plyrPlayer"));
-    });
-}
-
+// Legacy functions for backward compatibility
+function switchTo1() { switchToChannel('RCTI'); }
+function switchTo2() { switchToChannel('Trans TV'); }
+function switchTo3() { switchToChannel('Vidio'); }
+function switchTo4() { switchToChannel('Transvision'); }
+function switchTo5() { switchToChannel('CNN Indonesia'); }
+function switchToExtra1() { switchToChannel('MNC TV'); }
+function switchToExtra2() { switchToChannel('GTV'); }
 
 function resizeShakaPlayer() {
     let shakaContainer = document.getElementById("jwplayerDiv");
