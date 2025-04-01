@@ -13,11 +13,17 @@ playerInstance.setup({
       autostart: true
 });
 
-// Channel configuration object
+// Channel configuration object with DRM keys
 const channels = {
     'RCTI': {
         url: 'https://d1abp075u76pbq.cloudfront.net/live/eds/RCTI-DD/sa_dash_vmx/RCTI-DD.mpd',
-        referer: 'https://www.visionplus.id/'
+        referer: 'https://www.visionplus.id/',
+        drm: {
+            "clearkey": {
+                "keyId": "9ba3e153ef8956d6e2b0684fcf74f58f",
+                "key": "dbc28cb5c6426080f984a5b6d436bb30"
+            }
+        }
     },
     'Trans TV': {
         url: 'https://video.detik.com/transtv/smil:transtv.smil/index.m3u8'
@@ -32,13 +38,37 @@ const channels = {
         url: 'https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/chunklist_w733133162_b384000_sleng.m3u8'
     },
     'MNC TV': {
-        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/MNCTV-HD/sa_dash_vmx/MNCTV-HD.mpd'
+        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/MNCTV-HD/sa_dash_vmx/MNCTV-HD.mpd',
+        drm: {
+            "clearkey": {
+                "keyId": "828e0aba9825c3546a2831e4c0c36f7f",
+                "key": "f85d3dcd38981368ab3da597e97ebdcc"
+            }
+        }
     },
     'GTV': {
-        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/GTV-HD/sa_dash_vmx/GTV-HD.mpd'
+        url: 'https://cempedak-live-cdn.mncnow.id/live/eds/GTV-HD/sa_dash_vmx/GTV-HD.mpd',
+        drm: {
+            "clearkey": {
+                "keyId": "88f6c7cbd793374cb5f12d7e26dcd63b",
+                "key": "e82daa7c7bfb03d99327463fdbd37336"
+            }
+        }
     },
     'Trans7': {
-        url: 'https://video.detik.com/trans7/smil:trans7.smil/index.m3u8'
+        url: 'https://video.detik.com/trans7/smil:trans7.smil/playlist.m3u8',
+        type: 'hls',
+        drm: {
+            "clearkey": {
+                "keyId": "ce17264b317db108f19cdc11aa1a9e66",
+                "key": "a21188aee8fc5c56d016fcffcc6b2295"
+            }
+        },
+        headers: {
+            'Referer': 'https://www.trans7.co.id/',
+            'Origin': 'https://www.trans7.co.id',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
     },
     'SCTV': {
         url: 'https://app.mt2dc.com/misc?id=204'
@@ -193,39 +223,77 @@ function switchToChannel(channelName) {
 
     const player = jwplayer("jwplayerDiv");
     
-    // Configure player settings
-    player.setup({
+    // Basic configuration
+    const config = {
         file: channel.url,
         width: "100%",
+        height: "100%",
         aspectratio: "16:9",
         autostart: true,
         primary: "html5",
         hlshtml: true,
-        playbackRateControls: true,
-        preload: "auto",
         controls: true,
-        mute: false,
-        volume: 100,
-        repeat: false,
+        stretching: "fill",
+        skin: {
+            name: "youtube"
+        },
+        sharing: false,
         displaytitle: true,
-        displaydescription: true,
-        displaycaptions: true,
-        visualplay: true,
+        logo: {
+            hide: true
+        },
         playlist: [{
             file: channel.url,
-            title: channelName,
-            description: "Live TV Channel"
+            title: channelName
         }]
-    });
+    };
 
-    // Add referer if specified
-    if (channel.referer) {
+    // Add type configuration
+    if (channel.type) {
+        config.type = channel.type;
+    } else if (channel.url.includes('.mpd')) {
+        config.type = "dash";
+    } else if (channel.url.includes('.m3u8')) {
+        config.type = "hls";
+    }
+
+    // Add DRM if available
+    if (channel.drm) {
+        config.drm = channel.drm;
+    }
+
+    // Setup player
+    player.setup(config);
+
+    // Add custom headers if specified
+    if (channel.headers || channel.referer) {
+        const headers = channel.headers || {};
+        if (channel.referer && !headers.Referer) {
+            headers.Referer = channel.referer;
+        }
         player.setConfig({
-            httpHeaders: {
-                'Referer': channel.referer
-            }
+            httpHeaders: headers
         });
     }
+
+    // Error handling
+    player.on('error', function(e) {
+        console.error('Player error:', e);
+        setTimeout(() => {
+            player.load();
+            player.play();
+        }, 2000);
+    });
+
+    // Ready handling
+    player.on('ready', function() {
+        // Set player to theater mode size
+        const playerElement = document.getElementById('jwplayerDiv');
+        if (playerElement) {
+            playerElement.style.maxWidth = 'none';
+            playerElement.style.margin = '0';
+        }
+    });
 }
 
 // Legacy functions for backward compatibility
